@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSV Trudering - Training Polls</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f97316'%3E%3Cpath d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'/%3E%3C/svg%3E">
+</head>
+<body>
+    <!-- Theme Transition Overlay -->
+    <div id="themeTransition" class="theme-transition"></div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="login-container">
+                <h2>TSV Trudering Login</h2>
+                <p>Please login to participate in training polls</p>
+                
+                <div id="loginOptions" class="login-options">
+                    <button id="adminBtn" class="role-btn admin-btn">
+                        <div class="role-icon">👑</div>
+                        <div class="role-text">
+                            <h3>Administrator</h3>
+                            <p>Create and manage training polls</p>
+                        </div>
+                    </button>
+                    
+                    <button id="memberBtn" class="role-btn member-btn">
+                        <div class="role-icon">👤</div>
+                        <div class="role-text">
+                            <h3>Member</h3>
+                            <p>Vote on training polls</p>
+                        </div>
+                    </button>
+                </div>
+                
+                <div class="login-form" id="loginForm" style="display: none;">
+                    <input type="email" id="userEmail" placeholder="Email address" required>
+                    <input type="password" id="userPassword" placeholder="Password" required>
+                    <div class="form-actions">
+                        <button id="loginSubmit" class="btn btn-primary">Login</button>
+                        <button id="backBtn" class="btn btn-secondary">Back</button>
+                    </div>
+                    <p class="demo-info">Demo: admin@tsv.com / admin123 or member@tsv.com / member123</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <span class="brand-text">🏀 TSV Trudering Polls</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#polls" class="nav-link">Polls</a>
+                <a href="#about" class="nav-link">About</a>
+                <button id="themeToggle" class="theme-toggle" title="Toggle Dark/Light Mode">
+                    <span id="themeIcon">🌙</span>
+                </button>
+                <div id="userInfo" class="user-info" style="display: none;">
+                    <span id="userRole" class="user-role"></span>
+                    <button id="logoutBtn" class="logout-btn">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">TSV Trudering Training Polls</h1>
+                <p class="hero-subtitle">Voice your opinion on upcoming training sessions and activities</p>
+                <div class="hero-actions">
+                    <button onclick="showLoginModal()" class="btn btn-primary">Join Polls</button>
+                    <a href="#about" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Member Dashboard -->
+        <section id="memberDashboard" class="dashboard-section" style="display: none;">
+            <div class="container">
+                <h2 class="section-title">Active Training Polls</h2>
+                
+                <div class="polls-container">
+                    <div id="activePolls" class="polls-list">
+                        <!-- Active polls will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="my-votes">
+                    <h3>My Vote History</h3>
+                    <div id="memberVotes" class="votes-list">
+                        <!-- Member's votes will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard -->
+        <section id="adminDashboard" class="dashboard-section" style="display: none;">
+            <div class="container">
+                <h2 class="section-title">Administrator Dashboard</h2>
+                
+                <div class="admin-tabs">
+                    <button class="tab-btn active" data-tab="create">Create Poll</button>
+                    <button class="tab-btn" data-tab="manage">Manage Polls</button>
+                    <button class="tab-btn" data-tab="results">Poll Results</button>
+                </div>
+                
+                <!-- Create Poll Tab -->
+                <div id="createTab" class="tab-content active">
+                    <div class="admin-card">
+                        <h3>Create New Training Poll</h3>
+                        <div class="poll-creation-form">
+                            <div class="form-group">
+                                <label for="pollTitle">Poll Title</label>
+                                <input type="text" id="pollTitle" class="form-input" placeholder="e.g., Saturday Morning Basketball Training">
+                            </div>
+                            <div class="form-group">
+                                <label for="pollDescription">Description</label>
+                                <textarea id="pollDescription" class="form-input" rows="3" placeholder="Provide details about the training session..."></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="pollDate">Training Date</label>
+                                    <input type="date" id="pollDate" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pollTime">Training Time</label>
+                                    <input type="time" id="pollTime" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pollDeadline">Poll Deadline</label>
+                                    <input type="date" id="pollDeadline" class="form-input">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="pollLocation">Location (Optional)</label>
+                                <input type="text" id="pollLocation" class="form-input" placeholder="e.g., Main Gym, Court 1">
+                            </div>
+                            <button id="createPoll" class="btn btn-primary">Create Poll</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Manage Polls Tab -->
+                <div id="manageTab" class="tab-content">
+                    <div class="admin-card">
+                        <h3>Manage Existing Polls</h3>
+                        <div class="poll-filters">
+                            <select id="statusFilter" class="form-input">
+                                <option value="">All Polls</option>
+                                <option value="active">Active</option>
+                                <option value="closed">Closed</option>
+                                <option value="expired">Expired</option>
+                            </select>
+                        </div>
+                        <div id="managePollsList" class="polls-list">
+                            <!-- Polls management will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Tab -->
+                <div id="resultsTab" class="tab-content">
+                    <div class="admin-card">
+                        <h3>Poll Results & Statistics</h3>
+                        <div class="stats-overview">
+                            <div class="stat-card">
+                                <h4>Total Polls</h4>
+                                <div class="stat-number" id="totalPolls">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Active Polls</h4>
+                                <div class="stat-number" id="activePolls">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Total Votes</h4>
+                                <div class="stat-number" id="totalVotes">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Participation Rate</h4>
+                                <div class="stat-number" id="participationRate">0%</div>
+                            </div>
+                        </div>
+                        <div id="pollResults" class="results-list">
+                            <!-- Detailed poll results will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <div class="container">
+                <h2 class="section-title">About TSV Trudering Polls</h2>
+                <div class="about-content">
+                    <div class="about-card">
+                        <h3>📊 Democratic Decision Making</h3>
+                        <p>Help shape our training schedule by voting on proposed sessions. Your opinion matters in planning activities.</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>🏀 Training Coordination</h3>
+                        <p>Ensure adequate participation before scheduling training sessions. Avoid conflicts and maximize attendance.</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>⚡ Real-time Results</h3>
+                        <p>Admins can see voting results in real-time and make informed decisions about training schedules.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Notification Container -->
+    <div id="notifications" class="notifications-container"></div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-brand">
+                        <span>🏀 TSV Trudering</span>
+                    </div>
+                    <p class="footer-text">Democratic training planning through member polls.</p>
+                </div>
+                <div class="footer-right">
+                    <div class="footer-links">
+                        <a href="#home" class="footer-link">Home</a>
+                        <a href="#polls" class="footer-link">Polls</a>
+                        <a href="#about" class="footer-link">About</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TSV Trudering. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
